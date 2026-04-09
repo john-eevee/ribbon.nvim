@@ -61,6 +61,47 @@ vim.keymap.set('n', 'mt', require('ribbon').toggle_tree)      -- Toggle side tre
 vim.keymap.set('n', 'mc', require('ribbon').clear_all)        -- Clear all bookmarks
 ```
 
+### Auto-configure All Mnemonics (A-Z, 0-9)
+
+To automatically set up all 36 mnemonic keybindings, use this helper in your config:
+
+```lua
+-- Ribbon mnemonics setup
+-- Maps: m{char} to set bookmark, '{char} to jump
+local function setup_ribbon_mnemonics()
+    local chars = {}
+    -- 0-9
+    for i = 0, 9 do table.insert(chars, tostring(i)) end
+    -- A-Z
+    for i = 65, 90 do table.insert(chars, string.char(i)) end
+    
+    for _, char in ipairs(chars) do
+        vim.keymap.set('n', 'm' .. char, function()
+            require('ribbon').mark(char)
+        end)
+        vim.keymap.set('n', "'" .. char, function()
+            require('ribbon').jump(char)
+        end)
+    end
+end
+
+setup_ribbon_mnemonics()
+
+-- Optional: other ribbon bindings
+vim.keymap.set('n', 'mm', require('ribbon').toggle)
+vim.keymap.set('n', 'me', require('ribbon').annotate)
+vim.keymap.set('n', 'mt', require('ribbon').toggle_tree)
+vim.keymap.set('n', 'mc', require('ribbon').clear_all)
+```
+
+This creates the following mappings:
+
+| Set Bookmark | Jump |
+|--------------|------|
+| `m0` - `m9` | `'0` - `'9` |
+| `mA` - `mZ` | `'A` - `'Z` |
+| `mm` (anonymous) | - |
+
 ## API
 
 | Function | Description |
